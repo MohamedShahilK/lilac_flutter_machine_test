@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:lilac_flutter_machine_test/business_logic/home/state.dart';
@@ -28,7 +29,8 @@ class HomeController extends GetxController {
   void onInit() {
     super.onInit();
     videoPlayerController = VideoPlayerController.network(
-      'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4'
+      // 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4'
+      'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
           .replaceFirst('http', 'https'),
     )..initialize().then((_) {
         // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
@@ -41,7 +43,15 @@ class HomeController extends GetxController {
         state.duration.value = videoPlayerController.value.duration;
       });
     videoPlayerController.pause();
+    // setLandscape();
   }
+
+  // Future setLandscape() async {
+  //   await SystemChrome.setPreferredOrientations([
+  //     DeviceOrientation.landscapeLeft,
+  //     DeviceOrientation.landscapeRight,
+  //   ]);
+  // }
 
   @override
   void dispose() {
