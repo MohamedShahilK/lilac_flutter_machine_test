@@ -29,8 +29,10 @@ class HomeController extends GetxController {
   void onInit() {
     super.onInit();
     videoPlayerController = VideoPlayerController.network(
-      // 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4'
-      'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
+      // formatHint: VideoFormat.other,
+      // httpHeaders: ,
+      'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4'
+      // 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
           .replaceFirst('http', 'https'),
     )..initialize().then((_) {
         // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.

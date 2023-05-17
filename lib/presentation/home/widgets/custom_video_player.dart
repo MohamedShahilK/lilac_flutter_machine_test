@@ -1,9 +1,10 @@
+// ignore_for_file: avoid_print
+
 import 'package:auto_orientation/auto_orientation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lilac_flutter_machine_test/business_logic/home/controller.dart';
 import 'package:lilac_flutter_machine_test/presentation/home/widgets/custom_video_controller.dart';
-import 'package:syncfusion_flutter_sliders/sliders.dart';
 import 'package:video_player/video_player.dart';
 // import 'package:syncfusion_flutter_core/theme.dart';
 
@@ -15,11 +16,13 @@ class CustomVideoPlayer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print(
-        "isIntialized : ${controller.videoPlayerController.value.isInitialized}");
+      "isIntialized : ${controller.videoPlayerController.value.isInitialized}",
+    );
     return Obx(
       () => controller.state.isInitialized.value
           ? OrientationBuilder(builder: (context, orientation) {
               final isPortrait = orientation == Orientation.portrait;
+              controller.state.isLandScape.value = !isPortrait;
               return SizedBox(
                 height: isPortrait ? 250 : null,
                 width: MediaQuery.of(context).size.width,
@@ -30,6 +33,8 @@ class CustomVideoPlayer extends StatelessWidget {
                     SizedBox(
                       child: VideoPlayer(controller.videoPlayerController),
                     ),
+
+                    // Positioned.fill not much important
                     Positioned.fill(
                       child: CustomVideoControllers(
                         // controller: controller.videoPlayerController,
@@ -41,6 +46,76 @@ class CustomVideoPlayer extends StatelessWidget {
                             AutoOrientation.portraitUpMode();
                           }
                         },
+                      ),
+                    ),
+
+                    //
+                    Positioned(
+                      top: 15,
+                      right: 7,
+                      child: InkWell(
+                        onTap: () {
+                          // print('1111111111111111111111111111111111');
+                        },
+                        child: Container(
+                          height: 40,
+                          width: 40,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(13),
+                            image: const DecorationImage(
+                              image: AssetImage('assets/avatar.jpg'),
+                              fit: BoxFit.fill,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    //
+                    Positioned(
+                      top: 15,
+                      left: 9,
+                      child: InkWell(
+                        onTap: () {
+                          // print('1111111111111111111111111111111111');
+                        },
+                        // child: const Icon(
+                        //   Icons.menu,
+                        //   color: Colors.white,
+                        //   size: 30,
+                        // ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              height: 3.5,
+                              width: 25,
+                              margin: const EdgeInsets.symmetric(vertical: 2),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                            ),
+                            Container(
+                              height: 3.5,
+                              width: 17,
+                              margin: const EdgeInsets.symmetric(vertical: 2),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                            ),
+                            Container(
+                              height: 3.5,
+                              width: 25,
+                              margin: const EdgeInsets.symmetric(vertical: 2),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ],

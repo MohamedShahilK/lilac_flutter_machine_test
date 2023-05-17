@@ -20,9 +20,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+      title: 'Lilac Flutter Machine Test',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(        
+        primarySwatch: Colors.blue,    
+        scaffoldBackgroundColor: Colors.grey[100]    
       ),
 
       // Routes
