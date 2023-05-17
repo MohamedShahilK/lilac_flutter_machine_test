@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "502778469026",
+    "project_id": "lilac-flutter-machine-test",
+    "storage_bucket": "lilac-flutter-machine-test.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:502778469026:android:91ce8de0796ca4826555fb",
+        "android_client_info": {
+          "package_name": "com.example.lilac_flutter_machine_test"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "502778469026-g7jln09b0fgjb9lk6hcm960vlds9ebpa.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCjCPUHhPHU1sS7j44uE7tv5AcMs1TRK1o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "502778469026-g7jln09b0fgjb9lk6hcm960vlds9ebpa.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
