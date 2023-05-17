@@ -28,7 +28,6 @@ class CustomVideoPlayer extends StatelessWidget {
           fit: isPortrait ? StackFit.loose : StackFit.expand,
           alignment: Alignment.bottomCenter,
           children: [
-
             // Rebuilding
             Obx(
               () => controller.state.isInitialized.value
@@ -63,7 +62,8 @@ class CustomVideoPlayer extends StatelessWidget {
               right: 7,
               child: InkWell(
                 onTap: () {
-                 Get.toNamed('/profile');
+                  controller.videoPlayerController.pause();
+                  Get.toNamed('/profile');
                 },
                 child: Container(
                   height: 40,

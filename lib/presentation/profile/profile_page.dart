@@ -1,6 +1,9 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 import 'package:lilac_flutter_machine_test/business_logic/profile/controller.dart';
+import 'package:lilac_flutter_machine_test/presentation/profile/widgets/custom_button.dart';
 
 class ProfilePage extends GetView<ProfileController> {
   const ProfilePage({super.key});
@@ -30,7 +33,7 @@ class ProfilePage extends GetView<ProfileController> {
               CircleAvatar(
                 maxRadius: 60,
                 // child: Image.asset('assets/avatar.jpg'),
-                backgroundColor: Colors.red,
+                // backgroundColor: Colors.red,
                 backgroundImage: AssetImage('assets/avatar.jpg'),
               ),
               Positioned(
@@ -61,7 +64,7 @@ class ProfilePage extends GetView<ProfileController> {
             ),
           ),
           const Padding(
-            padding: EdgeInsets.only(top: 3,bottom: 10),
+            padding: EdgeInsets.only(top: 3, bottom: 10),
             child: Text(
               'superadmin@gmail.com',
               style: TextStyle(fontSize: 16),
@@ -76,34 +79,20 @@ class ProfilePage extends GetView<ProfileController> {
               _profileItem(
                   name: "superadmin@gmail.com",
                   icon: Icons.alternate_email_rounded),
-              _profileItem(
-                  name: "05/04/1998",
-                  icon: Icons.date_range_outlined),
+              _profileItem(name: "05/04/1998", icon: Icons.date_range_outlined),
             ],
           ),
 
           // Spacer(),
           // Edit Profile Button
-          Padding(
-            // padding: const EdgeInsets.only(top: 50),
-            padding: const EdgeInsets.only(top: 65),
-            child: ElevatedButton(
-              onPressed: () {},
-              style: ButtonStyle(
-                  shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(26))),
-                  backgroundColor: MaterialStateProperty.all(Colors.grey[400]),
-                  elevation: MaterialStateProperty.all(0),
-                  fixedSize: MaterialStateProperty.all(
-                      Size(MediaQuery.of(context).size.width * (3 / 5), 45))),
-              child: const Text(
-                'Edit Profile',
-                style: TextStyle(color: Colors.white, fontSize: 16),
-              ),
-            ),
+          CustomButton(
+            field: 'Edit Profile',
+            onTap: () {
+              Get.toNamed('/editProfile');
+            },
           ),
 
-          // Edit Profile Button
+          // LogOut Button
           Padding(
             padding: const EdgeInsets.only(top: 15),
             child: TextButton(
