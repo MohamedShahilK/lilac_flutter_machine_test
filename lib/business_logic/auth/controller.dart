@@ -39,7 +39,6 @@ class AuthController extends GetxController {
                 final uid = user.uid;
                 isLoginSuccess =
                     await _firebaseSignInWithCredential(credential);
-                
               } else {
                 print('Error');
               }
@@ -100,6 +99,7 @@ class AuthController extends GetxController {
           //   key: SharedPrefKey.kLoginUserId,
           //   value: _user.uid,
           // );
+          
           status = true;
           //here, get all cart items from network and pass to hive db
           // await cartRepository.transferNetworkCartItemToHive(_user.uid);
@@ -117,4 +117,6 @@ class AuthController extends GetxController {
     }
     return status;
   }
+
+
 }

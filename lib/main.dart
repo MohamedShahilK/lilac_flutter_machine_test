@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,10 +11,16 @@ import 'firebase_options.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await SystemChrome.setEnabledSystemUIMode(
-    SystemUiMode.manual,
-    overlays: SystemUiOverlay.values,
-  );
+  // await SystemChrome.setEnabledSystemUIMode(
+  //   SystemUiMode.leanBack,
+  //   overlays: SystemUiOverlay.values,
+  // );
+  // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+  //   statusBarColor: Colors.transparent,
+  // ));
+  // SystemChrome.setEnabledSystemUIMode(SystemUiMode.leanBack);
+
+  // print(FirebaseAuth.instance.currentUser == null);
   runApp(const MyApp());
 }
 
@@ -26,10 +33,9 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       title: 'Lilac Flutter Machine Test',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(        
-        primarySwatch: Colors.blue,    
-        scaffoldBackgroundColor: Colors.grey[100]    
-      ),
+      theme: ThemeData(
+          primarySwatch: Colors.blue,
+          scaffoldBackgroundColor: Colors.grey[100]),
 
       // Routes
       initialRoute: AppRouteNames.initial,

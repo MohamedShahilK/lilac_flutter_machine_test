@@ -114,11 +114,12 @@ class _PhoneNumberWidget extends StatelessWidget {
             if (isValid) {
               controller.state.isOtpPage.value = true;
               controller.performFirebasePhoneAuth().then((value) {
-                if (!value) {
-                  showTextMessageToaster('Login failed');
-                } else {
+                if (value) {
                   Get.offAndToNamed('/home');
                 }
+                //  else {
+                //   showTextMessageToaster('Login failed');
+                // }
               });
             }
             // if (controller.formKey.currentState!.validate()) {

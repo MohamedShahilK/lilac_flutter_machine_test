@@ -1,4 +1,8 @@
-import 'package:flutter/services.dart';
+// import 'package:flutter/material.dart';
+// import 'package:flutter/services.dart';
+// ignore_for_file: avoid_print
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:lilac_flutter_machine_test/business_logic/home/state.dart';
@@ -8,6 +12,8 @@ class HomeController extends GetxController {
   final state = HomeState();
 
   late VideoPlayerController videoPlayerController;
+
+  // final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void onReady() {
@@ -32,7 +38,7 @@ class HomeController extends GetxController {
       // formatHint: VideoFormat.other,
       // httpHeaders: ,
       'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4'
-      // 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
+          // 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
           .replaceFirst('http', 'https'),
     )..initialize().then((_) {
         // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
@@ -54,6 +60,17 @@ class HomeController extends GetxController {
   //     DeviceOrientation.landscapeRight,
   //   ]);
   // }
+
+  // LogOut
+  Future performLogOut() async {
+    final User? userData = FirebaseAuth.instance.currentUser;
+    if (userData != null) {
+      await FirebaseAuth.instance.signOut();
+      return true;
+    } else {
+      return false;
+    }
+  }
 
   @override
   void dispose() {

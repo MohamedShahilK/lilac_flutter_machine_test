@@ -6,15 +6,17 @@ import 'package:get/get.dart';
 import 'package:lilac_flutter_machine_test/routes/route_names.dart';
 
 class RedirectingMiddleWare extends GetMiddleware {
-  @override
-  int? priority = 1;
-  RedirectingMiddleWare({
-   required this.priority,
-  });
+  // @override
+  // int? priority = 1;
+  // RedirectingMiddleWare({
+  //  required this.priority,
+  // });
   @override
   RouteSettings? redirect(String? route) {
+    print(FirebaseAuth.instance.currentUser == null);
     if (FirebaseAuth.instance.currentUser == null) {
-      return const RouteSettings(name: AppRouteNames.initial);
+      // return const RouteSettings(name: AppRouteNames.initial);
+      return null;
     } else {
       return const RouteSettings(name: AppRouteNames.home);
     }

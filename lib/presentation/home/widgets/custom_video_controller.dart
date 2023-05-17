@@ -115,7 +115,7 @@ class CustomVideoControllers extends StatelessWidget {
                               value: homeController
                                   .state.position.value.inSeconds
                                   .toDouble(),
-                              min: 0.0,
+                              min: -1.0,
                               max: homeController.state.duration.value.inSeconds
                                   .toDouble(),
                               activeColor: Colors.lightGreen,
