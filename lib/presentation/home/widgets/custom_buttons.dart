@@ -1,10 +1,16 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 
+import 'package:lilac_flutter_machine_test/business_logic/home/controller.dart';
+import 'package:lilac_flutter_machine_test/utils/data/video_urls.dart';
+
 class DownloadButton extends StatelessWidget {
   const DownloadButton({
-    super.key,
-  });
+    Key? key,
+    required this.controller,
+  }) : super(key: key);
+
+  final HomeController controller;
 
   @override
   Widget build(BuildContext context) {
@@ -12,9 +18,20 @@ class DownloadButton extends StatelessWidget {
       padding: const EdgeInsets.only(top: 14),
       child: Row(
         children: [
-          const Padding(
-            padding: EdgeInsets.only(left: 12),
-            child: _RoundButton(icon: Icons.keyboard_arrow_left),
+          Padding(
+            padding: const EdgeInsets.only(left: 12),
+            child: _RoundButton(
+              icon: Icons.keyboard_arrow_left,
+              onTap: () {
+                final currentIndex =
+                    int.parse(controller.state.videoIndex.value);
+                if (currentIndex == 0) return;
+                controller.videoFuture.value =
+                    controller.play(videos[currentIndex - 1]['url']!);
+                controller.state.videoIndex.value =
+                    (currentIndex - 1).toString();
+              },
+            ),
           ),
           const Spacer(),
           ElevatedButton.icon(
@@ -36,9 +53,20 @@ class DownloadButton extends StatelessWidget {
             ),
           ),
           const Spacer(),
-          const Padding(
-            padding: EdgeInsets.only(right: 12),
-            child: _RoundButton(icon: Icons.keyboard_arrow_right),
+          Padding(
+            padding: const EdgeInsets.only(right: 12),
+            child: _RoundButton(
+              icon: Icons.keyboard_arrow_right,
+              onTap: () {
+                final currentIndex =
+                    int.parse(controller.state.videoIndex.value);
+                if (currentIndex == videos.length - 1) return;
+                controller.videoFuture.value =
+                    controller.play(videos[currentIndex + 1]['url']!);
+                controller.state.videoIndex.value =
+                    (currentIndex + 1).toString();
+              },
+            ),
           ),
         ],
       ),
@@ -47,20 +75,26 @@ class DownloadButton extends StatelessWidget {
 }
 
 class _RoundButton extends StatelessWidget {
-  final IconData icon;
+  const _RoundButton({
+    Key? key,
+    required this.icon,
+    required this.onTap,
+  }) : super(key: key);
 
-  const _RoundButton({required this.icon});
+  final IconData icon;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 40,
-      width: 40,
-      decoration:  BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(13)
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        height: 40,
+        width: 40,
+        decoration: BoxDecoration(
+            color: Colors.white, borderRadius: BorderRadius.circular(13)),
+        child: Icon(icon, size: 21, color: Colors.black87),
       ),
-      child: Icon(icon, size: 21,color: Colors.black87),
     );
   }
 }

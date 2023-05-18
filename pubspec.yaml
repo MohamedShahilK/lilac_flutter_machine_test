@@ -48,6 +48,7 @@ dependencies:
   loading_animation_widget: ^1.2.0+4
   intl: ^0.18.1
   flutter_overlay_loader: ^2.0.0
+  dio: ^5.1.2
   # volume_controller: ^2.0.6
   # wakelock: ^0.6.2
   

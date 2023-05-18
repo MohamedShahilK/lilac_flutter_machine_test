@@ -107,28 +107,30 @@ class CustomVideoControllers extends StatelessWidget {
                         children: [
                           // Progress Bar
                           SfSliderTheme(
-                            data: SfSliderThemeData(
-                              thumbRadius: 6.5,
-                              // overlayRadius: 50,
-                            ),
-                            child: SfSlider(
-                              value: homeController
-                                  .state.position.value.inSeconds
-                                  .toDouble(),
-                              min: -1.0,
-                              max: homeController.state.duration.value.inSeconds
-                                  .toDouble(),
-                              activeColor: Colors.lightGreen,
-                              onChanged: (value) async {
-                                final currentPosition =
-                                    Duration(seconds: value.toInt());
-                                await homeController.videoPlayerController
-                                    .seekTo(currentPosition);
-                              },
-                              thumbIcon: const Icon(Icons.circle,
-                                  color: Colors.black, size: 6.0),
-                            ),
-                          ),
+                              data: SfSliderThemeData(
+                                thumbRadius: 6.5,
+                                // overlayRadius: 50,
+                              ),
+                              child: Obx(
+                                () => SfSlider(
+                                  value: homeController
+                                      .state.position.value.inSeconds
+                                      .toDouble(),
+                                  min: -1.0,
+                                  max: homeController
+                                      .state.duration.value.inSeconds
+                                      .toDouble(),
+                                  activeColor: Colors.lightGreen,
+                                  onChanged: (value) async {
+                                    final currentPosition =
+                                        Duration(seconds: value.toInt());
+                                    await homeController.videoPlayerController
+                                        .seekTo(currentPosition);
+                                  },
+                                  thumbIcon: const Icon(Icons.circle,
+                                      color: Colors.black, size: 6.0),
+                                ),
+                              )),
 
                           // left, right, volume, settings, fullscreen buttons
                           Padding(
@@ -152,9 +154,31 @@ class CustomVideoControllers extends StatelessWidget {
     return Row(
       // mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        const Icon(Icons.fast_rewind, color: Colors.white),
+        InkWell(
+          onTap: () async {
+            await homeController.videoPlayerController.seekTo(
+              Duration(
+                seconds: homeController
+                        .videoPlayerController.value.position.inSeconds -
+                    10,
+              ),
+            );
+          },
+          child: const Icon(Icons.fast_rewind, color: Colors.white),
+        ),
         const SizedBox(width: 10),
-        const Icon(Icons.fast_forward, color: Colors.white),
+        InkWell(
+          onTap: () async {
+            await homeController.videoPlayerController.seekTo(
+              Duration(
+                seconds: homeController
+                        .videoPlayerController.value.position.inSeconds +
+                    10,
+              ),
+            );
+          },
+          child: const Icon(Icons.fast_forward, color: Colors.white),
+        ),
         const SizedBox(width: 10),
         InkWell(
           onTap: () {

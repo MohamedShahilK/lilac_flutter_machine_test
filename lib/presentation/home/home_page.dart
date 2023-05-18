@@ -22,7 +22,9 @@ class HomePage extends GetView<HomeController> {
                 : Column(
                     children: [
                       CustomVideoPlayer(controller: controller),
-                      const DownloadButton()
+                      DownloadButton(
+                        controller: controller,
+                      )
                     ],
                   ));
       }),

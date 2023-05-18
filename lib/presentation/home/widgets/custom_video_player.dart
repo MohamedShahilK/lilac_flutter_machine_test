@@ -20,7 +20,7 @@ class CustomVideoPlayer extends StatelessWidget {
     );
     return OrientationBuilder(builder: (context, orientation) {
       final isPortrait = orientation == Orientation.portrait;
-      controller.state.isLandScape.value = !isPortrait;
+      // controller.state.isLandScape.value = !isPortrait;
       return SizedBox(
         height: isPortrait ? 250 : null,
         width: MediaQuery.of(context).size.width,
@@ -29,16 +29,45 @@ class CustomVideoPlayer extends StatelessWidget {
           alignment: Alignment.bottomCenter,
           children: [
             // Rebuilding
-            Obx(
-              () => controller.state.isInitialized.value
-                  ? SizedBox(
-                      child: VideoPlayer(controller.videoPlayerController),
-                    )
-                  : Container(
-                      color: Colors.black,
-                      height: 250,
-                      child: const Center(child: CircularProgressIndicator()),
-                    ),
+            // Obx(
+            //   () => controller.state.isInitialized.value
+            // ? SizedBox(
+            //     child: VideoPlayer(controller.videoPlayerController),
+            //   )
+            // : Container(
+            //     color: Colors.black,
+            //     height: 250,
+            //     child: const Center(child: CircularProgressIndicator()),
+            //   ),
+            // ),
+
+            ValueListenableBuilder(
+              valueListenable: controller.videoFuture,
+              builder: (context, value, _) {
+                return value == null
+                    ? Container(
+                        // color: Colors.black,
+                        // height: 250,
+                        // // child: const Center(child: CircularProgressIndicator()),
+                        )
+                    : FutureBuilder(
+                        future: value,
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.done) {
+                            return VideoPlayer(
+                                controller.videoPlayerController);
+                          } else {
+                            return Container(
+                              color: Colors.black,
+                              height: 250,
+                              child: const Center(
+                                  child: CircularProgressIndicator()),
+                            );
+                          }
+                        },
+                      );
+              },
             ),
 
             // Positioned.fill not much important
