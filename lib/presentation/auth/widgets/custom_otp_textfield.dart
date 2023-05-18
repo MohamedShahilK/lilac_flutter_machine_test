@@ -1,11 +1,15 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:get/get.dart';
 import 'package:lilac_flutter_machine_test/utils/custom_popup.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:pinput/pinput.dart';
 
 import 'package:lilac_flutter_machine_test/business_logic/auth/controller.dart';
+
+import '../../../services/storage_service.dart';
 
 class CustomOtpTextfield extends StatelessWidget {
   CustomOtpTextfield({
@@ -47,11 +51,29 @@ class CustomOtpTextfield extends StatelessWidget {
           ),
           onCompleted: (value) {
             controller.state.phoneOtp.value = value;
-            controller.performManualPhoneVerification().then((status) {
+            Loader.show(
+              context,
+              progressIndicator: LoadingAnimationWidget.discreteCircle(
+                  color: Colors.grey, size: 24),
+            );
+            controller.performManualPhoneVerification().then((status) async {
               if (status) {
+                // // Get.offAndToNamed('/home');
+                // final userId = StorageService.to.getString('userId');
+                // final haveAccAlready =
+                //     await controller.isUserAlreadyHaveAccount(userId);
+
+                // if (!haveAccAlready) {
+                //   Get.offAndToNamed('/editProfile',
+                //       parameters: {'isProfilePage': 'false'});
+                // } else {
+                //   Get.offAndToNamed('/home');
+                // }
+                Loader.hide();
                 Get.offAndToNamed('/home');
               } else {
                 showTextMessageToaster('Login failed');
+                Loader.hide();
               }
             });
           },

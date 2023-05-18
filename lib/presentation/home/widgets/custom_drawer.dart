@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:get/get.dart';
 
 import '../../../business_logic/home/controller.dart';
@@ -38,6 +39,7 @@ class CustomDrawer extends StatelessWidget {
               title: const Text('Profile'),
               onTap: () {
                 Navigator.pop(context);
+                Get.toNamed('/profile');
               },
             ),
             ListTile(
@@ -47,9 +49,14 @@ class CustomDrawer extends StatelessWidget {
               title: const Text('LogOut'),
               onTap: () async {
                 // Navigator.pop(context);
-                await controller
-                    .performLogOut()
-                    .then((value) => Get.offAndToNamed('/'));
+                Loader.show(context,
+                    progressIndicator: const CircularProgressIndicator());
+                await controller.performLogOut().then((value) {
+                  Loader.hide();
+                  Get.offAndToNamed('/');
+                }).onError((error, stackTrace) {
+                  Loader.hide();
+                });
               },
             ),
           ],

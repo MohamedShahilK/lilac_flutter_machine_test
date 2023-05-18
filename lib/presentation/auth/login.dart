@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:lilac_flutter_machine_test/business_logic/auth/controller.dart';
 import 'package:lilac_flutter_machine_test/presentation/auth/widgets/custom_button.dart';
 import 'package:lilac_flutter_machine_test/presentation/auth/widgets/custom_otp_textfield.dart';
+import 'package:lilac_flutter_machine_test/services/storage_service.dart';
 import 'package:lilac_flutter_machine_test/utils/custom_popup.dart';
 
 import 'widgets/custom_textfield.dart';
@@ -113,9 +114,18 @@ class _PhoneNumberWidget extends StatelessWidget {
             final isValid = controller.formKey.currentState!.validate();
             if (isValid) {
               controller.state.isOtpPage.value = true;
-              controller.performFirebasePhoneAuth().then((value) {
+              controller.performFirebasePhoneAuth().then((value) async {
                 if (value) {
-                  Get.offAndToNamed('/home');
+                  // final userId = StorageService.to.getString('userId');
+                  // final haveAccAlready =
+                  //     await controller.isUserAlreadyHaveAccount(userId);
+
+                  // if (!haveAccAlready) {
+                  //   Get.offAndToNamed('/editProfile',
+                  //       parameters: {'isProfilePage': 'true'});
+                  // } else {
+                  //   Get.offAndToNamed('/home');
+                  // }
                 }
                 //  else {
                 //   showTextMessageToaster('Login failed');

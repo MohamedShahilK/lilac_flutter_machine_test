@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 
 class CustomButton extends StatelessWidget {
@@ -5,10 +6,12 @@ class CustomButton extends StatelessWidget {
     Key? key,
     required this.field,
     required this.onTap,
+    this.buttonBgColor,
   }) : super(key: key);
 
   final String field;
   final VoidCallback onTap;
+  final Color? buttonBgColor;
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +23,8 @@ class CustomButton extends StatelessWidget {
         style: ButtonStyle(
             shape: MaterialStateProperty.all(RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(26))),
-            backgroundColor: MaterialStateProperty.all(Colors.grey[400]),
+            backgroundColor:
+                MaterialStateProperty.all(buttonBgColor ?? Colors.grey[400]),
             elevation: MaterialStateProperty.all(0),
             fixedSize: MaterialStateProperty.all(
                 Size(MediaQuery.of(context).size.width * (3 / 5), 45))),
