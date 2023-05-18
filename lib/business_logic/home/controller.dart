@@ -3,21 +3,25 @@
 // ignore_for_file: avoid_print
 
 import 'dart:convert';
-import 'dart:ffi';
+import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:external_path/external_path.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:lilac_flutter_machine_test/business_logic/home/state.dart';
+import 'package:lilac_flutter_machine_test/services/extensions.dart';
+import 'package:lilac_flutter_machine_test/utils/custom_popup.dart';
 import 'package:lilac_flutter_machine_test/utils/data/video_urls.dart';
 import 'package:video_player/video_player.dart';
 
 class HomeController extends GetxController {
   final state = HomeState();
 
-   VideoPlayerController videoPlayerController = VideoPlayerController.network('');
+  VideoPlayerController videoPlayerController =
+      VideoPlayerController.network('');
 
   ValueNotifier<Future<void>?> videoFuture = ValueNotifier(null);
 
@@ -28,7 +32,7 @@ class HomeController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-   videoFuture.value  = play(videos[0]['url']!);
+    videoFuture.value = play(videos[0]['url']!, videos[0]['title']!);
   }
 
   @override
@@ -40,7 +44,7 @@ class HomeController extends GetxController {
 
     //
     videoPlayerController.addListener(() {
-    print('1111111111111111111');
+      print('1111111111111111111');
       // print(videoPlayerController.value.position.inSeconds);R
 
       // add postion value into "Rx<Duration> postion"
@@ -48,17 +52,23 @@ class HomeController extends GetxController {
     });
   }
 
-
-
-  Future<void> play(String url) async {
-    // if (url.isEmpty) {
-    //   url =
-    //       'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4';
-    // }
+  Future<void> play(String url, String title) async {
     if (videoPlayerController.value.isInitialized) {
       await videoPlayerController.dispose();
     }
-    videoPlayerController = VideoPlayerController.network(url);
+    // print('22222222222222222222222222222222222222222 : ${await checkVideoIsSavedInDevice(title)}');
+    if (await checkVideoIsSavedInDevice(title)) {
+      await decryptFile(title);
+      var path = await ExternalPath.getExternalStoragePublicDirectory(
+          ExternalPath.DIRECTORY_DOWNLOADS);
+
+      // final file = File('$path/secret/${title}_decrypted.mp4');
+      final file = File('$path/secret/_decrypted.mp4');
+      videoPlayerController = VideoPlayerController.file(file);
+    } else {
+      await deleteFileFromDevice('_decrypted');
+      videoPlayerController = VideoPlayerController.network(url);
+    }
     return videoPlayerController.initialize().then((value) {
       // add duration value into "Rx<Duration> duration"
       state.duration.value = videoPlayerController.value.duration;
@@ -67,6 +77,16 @@ class HomeController extends GetxController {
       print('index : ${state.videoIndex}');
       videoPlayerController.pause();
     });
+  }
+
+  // Check whether video downloaded or not
+  Future<bool> checkVideoIsSavedInDevice(String title) async {
+    var path = await ExternalPath.getExternalStoragePublicDirectory(
+        ExternalPath.DIRECTORY_DOWNLOADS);
+
+    final file = File('$path/secret/$title.aes');
+
+    return await file.exists();
   }
 
   // LogOut

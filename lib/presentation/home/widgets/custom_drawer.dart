@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:get/get.dart';
+import 'package:lilac_flutter_machine_test/services/extensions.dart';
 import 'package:lilac_flutter_machine_test/utils/data/video_urls.dart';
 import 'package:video_player/video_player.dart';
 
@@ -42,11 +43,17 @@ class CustomDrawer extends StatelessWidget {
                   Icons.video_library_sharp,
                 ),
                 title: Text(e['title']!),
-                onTap: () {
+                onTap: () async {
                   Navigator.pop(context);
                   // Get.toNamed('/profile');
-                  controller.videoFuture.value = controller.play(e['url']!);
-                  controller.state.videoIndex.value = videos.indexWhere((element) => element['url'] == e['url']).toString();
+                  // if (await controller.checkVideoIsSavedInDevice(e['title']!) == false) {
+                  //   await deleteFileFromDevice('_decrypted');
+                  // }
+                  controller.videoFuture.value =
+                      controller.play(e['url']!, e['title']!);
+                  controller.state.videoIndex.value = videos
+                      .indexWhere((element) => element['url'] == e['url'])
+                      .toString();
                   controller.videoFuture.notifyListeners();
                 },
               );
