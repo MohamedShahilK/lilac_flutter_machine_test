@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:lilac_flutter_machine_test/routes/pages.dart';
@@ -12,6 +13,9 @@ import 'firebase_options.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  //enables secure mode for app, disables screenshot, screen recording
+  await FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
+  //enables secure mode for app, disables screenshot, screen recording
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await Get.putAsync<StorageService>(() => StorageService().init());
   runApp(const MyApp());

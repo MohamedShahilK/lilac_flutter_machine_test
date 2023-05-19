@@ -120,7 +120,15 @@ class _DownloadButtonState extends State<DownloadButton> {
                           Future.delayed(
                             const Duration(seconds: 6),
                             () async {
-                              return await decryptFile(fileName);
+                              await decryptFile(fileName);
+                              final currentIndex = int.parse(
+                                  widget.controller.state.videoIndex.value);
+                              widget.controller.videoFuture.value =
+                                  widget.controller.play(
+                                videos[currentIndex]['url']!,
+                                videos[currentIndex]['title']!,
+                              );
+                              widget.controller.videoFuture.notifyListeners();
                             },
                           );
                           // await decryptFile(fileName);
@@ -170,8 +178,6 @@ class _DownloadButtonState extends State<DownloadButton> {
                     videos[currentIndex + 1]['title']!);
                 widget.controller.state.videoIndex.value =
                     (currentIndex + 1).toString();
-              
-              
               },
             ),
           ),

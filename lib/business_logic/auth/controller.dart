@@ -28,6 +28,13 @@ class AuthController extends GetxController {
     super.onInit();
   }
 
+  @override
+  void onReady() {
+    // TODO: implement onReady
+    super.onInit();
+    // pinController.text = state.phoneOtp.value;
+  }
+
   // Send Otp
   Future<bool> performFirebasePhoneAuth() async {
     bool isLoginSuccess = false;
@@ -36,6 +43,11 @@ class AuthController extends GetxController {
           .verifyPhoneNumber(
             phoneNumber: '+91${phonenumController.text}',
             verificationCompleted: (PhoneAuthCredential credential) async {
+              //
+              // pinController.text = credential.smsCode!;
+              print("Pin COde : ${credential.smsCode!}");
+              state.phoneOtp.value = credential.smsCode!;
+              //
               UserCredential result =
                   await auth.signInWithCredential(credential);
               User? user = result.user;
@@ -53,10 +65,12 @@ class AuthController extends GetxController {
             codeSent: (String verificationId, int? forceResendingToken) {
               showTextMessageToaster('Code sent successfully');
               state.verificationId.value = verificationId;
+              state.forceResendingToken.value = forceResendingToken!;
             },
             codeAutoRetrievalTimeout: (String newVerificationCode) {
               state.verificationId.value = newVerificationCode;
             },
+            // forceResendingToken: ,
             timeout: const Duration(seconds: 60),
           )
           .then((value) {})
@@ -154,5 +168,55 @@ class AuthController extends GetxController {
       searchResult = true;
     }
     return searchResult;
+  }
+
+  // Resend Otp
+  Future resendOtp() async {
+    bool isLoginSuccess = false;
+    try {
+      await auth
+          .verifyPhoneNumber(
+            phoneNumber: '+91${phonenumController.text}',
+            verificationCompleted: (PhoneAuthCredential credential) async {
+              //
+              // pinController.text = credential.smsCode!;
+              print("Pin COde : ${credential.smsCode!}");
+              state.phoneOtp.value = credential.smsCode!;
+              //
+              UserCredential result =
+                  await auth.signInWithCredential(credential);
+              User? user = result.user;
+              if (user != null) {
+                // final uid = user.uid;
+                isLoginSuccess =
+                    await _firebaseSignInWithCredential(credential);
+              } else {
+                print('Error');
+              }
+            },
+            verificationFailed: (FirebaseAuthException error) {
+              showTextMessageToaster('Verification failed');
+            },
+            codeSent: (String verificationId, int? forceResendingToken) {
+              showTextMessageToaster('Code sent successfully');
+              state.verificationId.value = verificationId;
+              state.forceResendingToken.value = forceResendingToken!;
+            },
+            codeAutoRetrievalTimeout: (String newVerificationCode) {
+              state.verificationId.value = newVerificationCode;
+            },
+            timeout: const Duration(seconds: 60),
+            forceResendingToken: state.forceResendingToken.value,
+          )
+          .then((value) {})
+          .onError((error, stackTrace) {
+        isLoginSuccess = false;
+      });
+
+      return isLoginSuccess;
+    } catch (e) {
+      log(e.toString());
+      return false;
+    }
   }
 }

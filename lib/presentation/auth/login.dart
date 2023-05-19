@@ -8,6 +8,7 @@ import 'package:lilac_flutter_machine_test/presentation/auth/widgets/custom_butt
 import 'package:lilac_flutter_machine_test/presentation/auth/widgets/custom_otp_textfield.dart';
 import 'package:lilac_flutter_machine_test/services/storage_service.dart';
 import 'package:lilac_flutter_machine_test/utils/custom_popup.dart';
+import 'package:slide_countdown/slide_countdown.dart';
 
 import 'widgets/custom_textfield.dart';
 
@@ -18,6 +19,19 @@ class AuthPage extends GetView<AuthController> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[300],
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: InkWell(
+          onTap: () => controller.state.isOtpPage.value = false,
+          child: Obx(() => Icon(
+                controller.state.isOtpPage.value
+                    ? Icons.arrow_back_ios_new_sharp
+                    : null,
+                color: Colors.black,
+              )),
+        ),
+      ),
       body: Obx(
         () => !controller.state.isOtpPage.value
             ? _PhoneNumberWidget(controller: controller)
@@ -52,6 +66,52 @@ class _OtpSectionWidget extends StatelessWidget {
 
         // Pinput
         CustomOtpTextfield(controller: controller),
+
+        Center(
+          child: SlideCountdown(
+            onDone: () async {
+              await controller.resendOtp();
+            },
+            duration: const Duration(seconds: 30),
+            textStyle: TextStyle(color: Colors.grey[800], fontSize: 18),
+            separator: ':',
+            shouldShowMinutes: (Duration val) {
+              return true;
+            },
+            decoration: BoxDecoration(
+              // color: AppColors.buttonBlueColor,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            padding: const EdgeInsets.all(10),
+            // onDone: () => bloc.isAutoValidateOtpScreen.add(false),
+          ),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              "Didn't get it?",
+              style: TextStyle(
+                color: Colors.grey[600],
+                letterSpacing: 1,
+              ),
+            ),
+            const SizedBox(width: 12),
+            InkWell(
+              onTap: () async {
+                await controller.resendOtp();
+              },
+              child: const Text(
+                'Resend OTP',
+                style: TextStyle(
+                  fontSize: 14,
+                  letterSpacing: 1,
+                  decoration: TextDecoration.underline,
+                ),
+              ),
+            )
+          ],
+        ),
 
         // Btn
         // CustomButton(

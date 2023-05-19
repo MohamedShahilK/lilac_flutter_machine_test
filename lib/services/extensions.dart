@@ -62,8 +62,7 @@ encryptFile(String inFilePath, String filename) async {
 
 // Decryption
 decryptFile(String fileName) async {
-  showTextMessageToaster(
-      'Decryption Started.Don\'t close the app or touch anywhere');
+ 
   var dir = await DownloadsPath.downloadsDirectory();
   // File inFile = File("videoenc.aes");
   File inFile = File("${dir!.path}/secret/$fileName.aes");
@@ -75,7 +74,12 @@ decryptFile(String fileName) async {
   bool outFileExists = await outFile.exists();
 
   if (!outFileExists) {
+     showTextMessageToaster(
+      'Decryption Started.Don\'t close the app or touch anywhere');
     await outFile.create();
+  }else{
+    // if decryted file already there, then don't again do it
+    return;
   }
 
   final videoFileContents = await inFile.readAsBytesSync();
@@ -107,7 +111,7 @@ deleteFileFromDevice(String filename) async {
     file = File('$path/secret/$filename.mp4');
     try {
       file.delete();
-      showTextMessageToaster('Deleted');
+      // showTextMessageToaster('Deleted');
     } catch (e) {
       // return 0;
       print(e);
@@ -118,7 +122,7 @@ deleteFileFromDevice(String filename) async {
         File('$path/secret/${filename.toLowerCase().replaceAll(' ', '')}.mp4');
     try {
       file.delete();
-      showTextMessageToaster('Deleted');
+      // showTextMessageToaster('Deleted');
     } catch (e) {
       // return 0;
       print(e);
