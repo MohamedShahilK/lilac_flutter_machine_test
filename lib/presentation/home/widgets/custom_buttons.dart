@@ -33,34 +33,40 @@ class _DownloadButtonState extends State<DownloadButton> {
   Widget build(BuildContext context) {
     final provider = Provider.of<MyThemeStateNotifier>(context);
     return Padding(
-      padding: const EdgeInsets.only(top: 14),
-      child: Row(
-        // mainAxisAlignment: MainAxisAlignment.center,
+      padding: const EdgeInsets.only(top: 30),
+      child: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 12),
-            child: _RoundButton(
-              icon: Icons.keyboard_arrow_left,
-              onTap: () {
-                final currentIndex =
-                    int.parse(widget.controller.state.videoIndex.value);
-                if (currentIndex == 0) return;
-                widget.controller.videoFuture.value = widget.controller.play(
-                  videos[currentIndex - 1]['url']!,
-                  videos[currentIndex - 1]['title']!,
-                );
-                widget.controller.videoFuture.notifyListeners();
-                widget.controller.state.videoIndex.value =
-                    (currentIndex - 1).toString();
-              },
-            ),
-          ),
-          const Spacer(),
-          Column(
+          Row(
             // mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 12),
+                child: _RoundButton(
+                  icon: Icons.keyboard_arrow_left,
+                  onTap: () {
+                    final currentIndex =
+                        int.parse(widget.controller.state.videoIndex.value);
+                    if (currentIndex == 0) return;
+                    widget.controller.videoFuture.value =
+                        widget.controller.play(
+                      videos[currentIndex - 1]['url']!,
+                      videos[currentIndex - 1]['title']!,
+                    );
+                    widget.controller.videoFuture.notifyListeners();
+                    widget.controller.state.videoIndex.value =
+                        (currentIndex - 1).toString();
+                  },
+                ),
+              ),
+              const Spacer(),
               ElevatedButton.icon(
                 onPressed: () async {
+                  if (!widget
+                      .controller.videoPlayerController.value.isInitialized) {
+                    showTextMessageToaster(
+                        "please wait until the video is loaded completed");
+                    return;
+                  }
                   final dio = Dio();
                   // String imgurl =
                   // "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4";
@@ -167,28 +173,34 @@ class _DownloadButtonState extends State<DownloadButton> {
                   ),
                 ),
               ),
-
-              // Progress
-              const SizedBox(height: 32),
-              Text(downloadMsg),
+              const Spacer(),
+              Padding(
+                padding: const EdgeInsets.only(right: 12),
+                child: _RoundButton(
+                  icon: Icons.keyboard_arrow_right,
+                  onTap: () async {
+                    final currentIndex =
+                        int.parse(widget.controller.state.videoIndex.value);
+                    if (currentIndex == videos.length - 1) return;
+                    widget.controller.videoFuture.value = widget.controller
+                        .play(videos[currentIndex + 1]['url']!,
+                            videos[currentIndex + 1]['title']!);
+                    widget.controller.state.videoIndex.value =
+                        (currentIndex + 1).toString();
+                  },
+                ),
+              ),
             ],
           ),
-          const Spacer(),
-          Padding(
-            padding: const EdgeInsets.only(right: 12),
-            child: _RoundButton(
-              icon: Icons.keyboard_arrow_right,
-              onTap: () async {
-                final currentIndex =
-                    int.parse(widget.controller.state.videoIndex.value);
-                if (currentIndex == videos.length - 1) return;
-                widget.controller.videoFuture.value = widget.controller.play(
-                    videos[currentIndex + 1]['url']!,
-                    videos[currentIndex + 1]['title']!);
-                widget.controller.state.videoIndex.value =
-                    (currentIndex + 1).toString();
-              },
-            ),
+
+          // Download Progress
+          const SizedBox(height: 32),
+          Text(
+            downloadMsg,
+            style: TextStyle(
+                color: Provider.of<MyThemeStateNotifier>(context).isDarkModeOn
+                    ? Colors.white
+                    : Colors.black),
           ),
         ],
       ),

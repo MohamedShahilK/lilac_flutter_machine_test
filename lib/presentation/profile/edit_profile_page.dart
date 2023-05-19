@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 
 import 'package:lilac_flutter_machine_test/business_logic/profile/controller.dart';
 import 'package:lilac_flutter_machine_test/presentation/profile/widgets/custom_button.dart';
+import 'package:lilac_flutter_machine_test/services/extensions.dart';
 import 'package:lilac_flutter_machine_test/theme/app_state_notifier.dart';
 import 'package:lilac_flutter_machine_test/utils/custom_popup.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -171,6 +172,7 @@ class EditProfilePage extends GetView<ProfileController> {
                 controller.onReady();
                 Loader.hide();
                 showTextMessageToaster('Done');
+                notify(title: 'Lilac Flutter Machine Test', content: 'Profile Details Saved Successfully');
               }).onError((error, stackTrace) {
                 Loader.hide();
               });

@@ -1,3 +1,4 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_windowmanager/flutter_windowmanager.dart';
@@ -18,6 +19,24 @@ Future<void> main() async {
   //enables secure mode for app, disables screenshot, screen recording
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await Get.putAsync<StorageService>(() => StorageService().init());
+
+  // awesome notification initialization
+  AwesomeNotifications().initialize(
+    null, // icon for app when notification hits
+    [
+      NotificationChannel(
+        channelKey: 'key1',
+        channelName: 'Sha Coder Dev',
+        channelDescription: 'Notification',
+        defaultColor: const Color(0xFF9050DD),
+        ledColor: Colors.white,
+        playSound: true,
+        // soundSource: 'soundUrl',
+        enableLights: true,
+        enableVibration: true,
+      )
+    ],
+  );
 
   //
   runApp(

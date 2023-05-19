@@ -6,8 +6,6 @@ import 'package:get/get.dart';
 import 'package:lilac_flutter_machine_test/business_logic/auth/controller.dart';
 import 'package:lilac_flutter_machine_test/presentation/auth/widgets/custom_button.dart';
 import 'package:lilac_flutter_machine_test/presentation/auth/widgets/custom_otp_textfield.dart';
-import 'package:lilac_flutter_machine_test/services/storage_service.dart';
-import 'package:lilac_flutter_machine_test/utils/custom_popup.dart';
 import 'package:slide_countdown/slide_countdown.dart';
 
 import 'widgets/custom_textfield.dart';

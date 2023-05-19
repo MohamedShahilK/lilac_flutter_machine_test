@@ -15,6 +15,7 @@ import 'package:lilac_flutter_machine_test/business_logic/home/state.dart';
 import 'package:lilac_flutter_machine_test/services/extensions.dart';
 import 'package:lilac_flutter_machine_test/utils/custom_popup.dart';
 import 'package:lilac_flutter_machine_test/utils/data/video_urls.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:video_player/video_player.dart';
 
 class HomeController extends GetxController {
@@ -58,15 +59,30 @@ class HomeController extends GetxController {
     }
     // print('22222222222222222222222222222222222222222 : ${await checkVideoIsSavedInDevice(title)}');
     if (await checkVideoIsSavedInDevice(title)) {
-      await decryptFile(title);
-      var path = await ExternalPath.getExternalStoragePublicDirectory(
-          ExternalPath.DIRECTORY_DOWNLOADS);
+      Map<Permission, PermissionStatus> statuses = await [
+        Permission.storage,
+        //add more permission to request here
+      ].request();
+      if (statuses[Permission.storage]!.isGranted) {
+        await decryptFile(title);
+        var path = await ExternalPath.getExternalStoragePublicDirectory(
+            ExternalPath.DIRECTORY_DOWNLOADS);
 
-      // final file = File('$path/secret/${title}_decrypted.mp4');
-      final file = File('$path/secret/_decrypted.mp4');
-      videoPlayerController = VideoPlayerController.file(file);
+        // final file = File('$path/secret/${title}_decrypted.mp4');
+        final file = File('$path/secret/_decrypted.mp4');
+        videoPlayerController = VideoPlayerController.file(file);
+      } else {
+        showTextMessageToaster('No Permission to Storage access');
+        print("No permission to read and write.");
+        Map<Permission, PermissionStatus> statuses = await [
+          Permission.storage,
+          //add more permission to request here
+        ].request();
+      }
     } else {
-      await deleteFileFromDevice('_decrypted');
+      if (await checkdecryptedInDevice()) {
+        await deleteFileFromDevice('_decrypted');
+      }
       videoPlayerController = VideoPlayerController.network(url);
     }
     return videoPlayerController.initialize().then((value) {
@@ -86,6 +102,15 @@ class HomeController extends GetxController {
 
     final file = File('$path/secret/$title.aes');
 
+    return await file.exists();
+  }
+
+  // Check whether decrypted file is available or not
+  Future<bool> checkdecryptedInDevice() async {
+    var path = await ExternalPath.getExternalStoragePublicDirectory(
+        ExternalPath.DIRECTORY_DOWNLOADS);
+
+    final file = File('$path/secret/_decrypted.mp4');
     return await file.exists();
   }
 
