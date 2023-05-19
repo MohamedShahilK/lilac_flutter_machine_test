@@ -5,14 +5,19 @@ import 'package:get/get.dart';
 
 import 'package:lilac_flutter_machine_test/business_logic/profile/controller.dart';
 import 'package:lilac_flutter_machine_test/presentation/profile/widgets/custom_button.dart';
+import 'package:lilac_flutter_machine_test/theme/app_state_notifier.dart';
+import 'package:provider/provider.dart';
 
 class ProfilePage extends GetView<ProfileController> {
   const ProfilePage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<MyThemeStateNotifier>(context);
     return Scaffold(
-        backgroundColor: Colors.white,
+        // backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+
         // extendBodyBehindAppBar: true,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
@@ -20,11 +25,35 @@ class ProfilePage extends GetView<ProfileController> {
           leading: InkWell(
             // onTap: () => Get.back(),
             onTap: () => Get.back(),
-            child: const Icon(
+            child: Icon(
               Icons.arrow_back_ios_new_sharp,
-              color: Colors.black,
+              // color: Colors.black,
+              color: Theme.of(context).iconTheme.color,
             ),
           ),
+          actions: [
+            Switch(
+              trackColor: provider.isDarkModeOn
+                  ? MaterialStateProperty.all(Colors.white)
+                  : MaterialStateProperty.all(Colors.grey),
+              thumbColor: provider.isDarkModeOn
+                  ? MaterialStateProperty.all(Colors.white)
+                  : MaterialStateProperty.all(Colors.transparent),
+              thumbIcon: MaterialStateProperty.all(
+                Icon(
+                  provider.isDarkModeOn
+                      ? Icons.wb_sunny_outlined
+                      : Icons.nightlight,
+                  color: Colors.black,
+                ),
+              ),
+              value: Provider.of<MyThemeStateNotifier>(context).isDarkModeOn,
+              onChanged: (boolVal) {
+                Provider.of<MyThemeStateNotifier>(context, listen: false)
+                    .updateTheme(boolVal);
+              },
+            ),
+          ],
         ),
         body: Obx(
           () => Column(
@@ -62,8 +91,14 @@ class ProfilePage extends GetView<ProfileController> {
                 padding: const EdgeInsets.only(top: 10),
                 child: Text(
                   controller.state.userName.value,
-                  style: const TextStyle(
-                      fontSize: 22, fontWeight: FontWeight.bold),
+                  // style: const TextStyle(
+                  // fontSize: 22,
+                  // fontWeight: FontWeight.bold,
+                  // ),
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
                 ),
               ),
               Padding(
@@ -71,7 +106,11 @@ class ProfilePage extends GetView<ProfileController> {
                 child: Text(
                   // 'superadmin@gmail.com',
                   controller.state.email.value,
-                  style: const TextStyle(fontSize: 16),
+                  // style: const TextStyle(fontSize: 16),
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleMedium
+                      ?.copyWith(fontSize: 16),
                 ),
               ),
 
@@ -80,22 +119,19 @@ class ProfilePage extends GetView<ProfileController> {
                   // _profileItem(
                   //     name: "Kazhigar", icon: Icons.account_box_outlined),
                   _profileItem(
+                    context,
                     name: controller.state.name.value,
                     icon: Icons.person_2_outlined,
                   ),
                   _profileItem(
+                    context,
                     name: controller.state.email.value,
                     icon: Icons.alternate_email_rounded,
                   ),
-                  _profileItem(
+                  _profileItem(context,
                       name: controller.state.phNum.value, icon: Icons.phone),
-                  _profileItem(
-                      name: controller.convertDatetimeToString(
-                                  controller.state.dob.value) ==
-                              controller.convertDatetimeToString(DateTime.now())
-                          ? 'Select DOB'
-                          : controller.convertDatetimeToString(
-                              controller.state.dob.value),
+                  _profileItem(context,
+                      name: controller.state.dob.value,
                       icon: Icons.date_range_outlined),
                 ],
               ),
@@ -133,9 +169,12 @@ class ProfilePage extends GetView<ProfileController> {
                       elevation: MaterialStateProperty.all(0),
                       fixedSize: MaterialStateProperty.all(Size(
                           MediaQuery.of(context).size.width * (3 / 8), 45))),
-                  child: const Text(
+                  child: Text(
                     'LogOut',
-                    style: TextStyle(color: Colors.black),
+                    style: TextStyle( 
+                      color:
+                          provider.isDarkModeOn ? Colors.white : Colors.black,
+                    ),
                   ),
                 ),
               ),
@@ -144,7 +183,8 @@ class ProfilePage extends GetView<ProfileController> {
         ));
   }
 
-  Padding _profileItem({
+  Padding _profileItem(
+    BuildContext context, {
     required String name,
     required IconData icon,
   }) {
@@ -152,15 +192,25 @@ class ProfilePage extends GetView<ProfileController> {
       padding: const EdgeInsets.only(top: 25, left: 70),
       child: Row(
         children: [
-          Icon(icon, size: 28, color: Colors.black54),
+          Icon(
+            icon,
+            size: 28,
+            // color: Colors.black54,
+            color: Theme.of(context).iconTheme.color,
+          ),
           const SizedBox(width: 25),
           Text(
             name,
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Colors.black54,
-            ),
+            // style: const TextStyle(
+            // fontSize: 18,
+            // fontWeight: FontWeight.bold,
+            // color: Colors.black54,
+            // ),
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  // color: Colors.black54,
+                ),
           ),
         ],
       ),

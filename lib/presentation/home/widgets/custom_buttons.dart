@@ -5,9 +5,11 @@ import 'package:lecle_downloads_path_provider/lecle_downloads_path_provider.dart
 
 import 'package:lilac_flutter_machine_test/business_logic/home/controller.dart';
 import 'package:lilac_flutter_machine_test/services/extensions.dart';
+import 'package:lilac_flutter_machine_test/theme/app_state_notifier.dart';
 import 'package:lilac_flutter_machine_test/utils/custom_popup.dart';
 import 'package:lilac_flutter_machine_test/utils/data/video_urls.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
 
 // import 'package:downloads_path_provider_28/downloads_path_provider_28.dart';
 
@@ -29,9 +31,11 @@ class _DownloadButtonState extends State<DownloadButton> {
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<MyThemeStateNotifier>(context);
     return Padding(
       padding: const EdgeInsets.only(top: 14),
       child: Row(
+        // mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Padding(
             padding: const EdgeInsets.only(left: 12),
@@ -53,6 +57,7 @@ class _DownloadButtonState extends State<DownloadButton> {
           ),
           const Spacer(),
           Column(
+            // mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ElevatedButton.icon(
                 onPressed: () async {
@@ -141,17 +146,21 @@ class _DownloadButtonState extends State<DownloadButton> {
                     print("No permission to read and write.");
                   }
                 },
-                label: const Text(
+                label: Text(
                   'Download',
-                  style: TextStyle(color: Colors.black87, fontSize: 15.5),
+                  style: TextStyle(
+                      color:
+                          provider.isDarkModeOn ? Colors.white : Colors.black87,
+                      fontSize: 15.5),
                 ),
-                icon: const Icon(
+                icon: Icon(
                   Icons.arrow_drop_down_outlined,
-                  color: Colors.green,
+                  color: provider.isDarkModeOn ? Colors.white : Colors.green,
                 ),
                 style: ButtonStyle(
                   elevation: MaterialStateProperty.all(0),
-                  backgroundColor: MaterialStateProperty.all(Colors.white),
+                  backgroundColor: MaterialStateProperty.all(
+                      provider.isDarkModeOn ? Colors.grey : Colors.white),
                   shape: MaterialStateProperty.all(
                     RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12)),
@@ -199,14 +208,19 @@ class _RoundButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<MyThemeStateNotifier>(context);
     return InkWell(
       onTap: onTap,
       child: Container(
         height: 40,
         width: 40,
         decoration: BoxDecoration(
-            color: Colors.white, borderRadius: BorderRadius.circular(13)),
-        child: Icon(icon, size: 21, color: Colors.black87),
+          color: provider.isDarkModeOn ? Colors.grey : Colors.white,
+          borderRadius: BorderRadius.circular(13),
+        ),
+        child: Icon(icon,
+            size: 21,
+            color: provider.isDarkModeOn ? Colors.white : Colors.black87),
       ),
     );
   }

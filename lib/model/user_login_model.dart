@@ -35,7 +35,7 @@ class UserLoginModel {
       phoneNumber: map['phone_number'] as String,
       // createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int),
       // updatedAt: DateTime.fromMillisecondsSinceEpoch(map['updatedAt'] as int),
-      dob: convertToDateTime(map['dob']),
+      dob: (map['dob'] as Timestamp).toDate(),
       createdAt: convertToDateTime(map['created_at']),
       updatedAt: convertToDateTime(map['updated_at']),
     );

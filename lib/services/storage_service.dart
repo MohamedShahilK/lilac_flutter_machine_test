@@ -19,6 +19,14 @@ class StorageService extends GetxService {
     return _pref.getString(key) ?? '';
   }
 
+  Future<bool> setBool(String key, bool value) async {
+    return await _pref.setBool(key, value);
+  }
+
+  bool getBool(String key) {
+    return _pref.getBool(key) ?? false;
+  }
+
   Future<bool> remove(String key) async {
     return await _pref.remove(key);
   }

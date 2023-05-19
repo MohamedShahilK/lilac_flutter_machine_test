@@ -25,13 +25,13 @@ class ProfileController extends GetxController {
     // state.isProfilePage.value =
     //     params['isProfilePage'] == 'true' ? true : false;
   }
-@override
+
+  @override
   void onReady() {
     // TODO: implement onReady
     super.onReady();
     getUserData();
   }
-
 
   // Ger User Data
   Future getUserData() async {
@@ -50,11 +50,15 @@ class ProfileController extends GetxController {
       state.name.value = userLoginModel.name;
       state.email.value = userLoginModel.email;
       state.phNum.value = userLoginModel.phoneNumber;
+      state.dob.value = convertDatetimeToString(userLoginModel.dob);
+      state.dobInDateTime.value = userLoginModel.dob;
 
       usernameController.text = userLoginModel.userName;
       emailController.text = userLoginModel.email;
       nameController.text = userLoginModel.name;
-      // dobController.text = userLoginModel.dob;
+      dobController.text = convertDatetimeToString(userLoginModel.dob);
+      print(
+          'DOB :::::::::::::: ${convertDatetimeToString(userLoginModel.dob)}');
     }
   }
 
@@ -64,7 +68,7 @@ class ProfileController extends GetxController {
       "email_id": emailController.text,
       "user_name": usernameController.text,
       "name": nameController.text,
-      "dob": state.dob.value,
+      "dob": state.dobInDateTime.value,
       "updated_at": DateTime.now(),
     };
 
@@ -94,8 +98,8 @@ class ProfileController extends GetxController {
     );
 
     if (selected != null) {
-      state.dob.value = selected;
-      // await convertDatetimeToString(selected);
+      // state.dob.value = convertDatetimeToString(selected);
+      state.dobInDateTime.value = selected;
     }
   }
 

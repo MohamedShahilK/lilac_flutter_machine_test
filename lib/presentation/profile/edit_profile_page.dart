@@ -5,17 +5,21 @@ import 'package:get/get.dart';
 
 import 'package:lilac_flutter_machine_test/business_logic/profile/controller.dart';
 import 'package:lilac_flutter_machine_test/presentation/profile/widgets/custom_button.dart';
+import 'package:lilac_flutter_machine_test/theme/app_state_notifier.dart';
 import 'package:lilac_flutter_machine_test/utils/custom_popup.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:provider/provider.dart';
 
 class EditProfilePage extends GetView<ProfileController> {
   const EditProfilePage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<MyThemeStateNotifier>(context);
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: Colors.white,
+      // backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       // extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -23,11 +27,35 @@ class EditProfilePage extends GetView<ProfileController> {
         leading: InkWell(
           // onTap: () => Get.back(),
           onTap: () => Get.back(),
-          child: const Icon(
+          child: Icon(
             Icons.arrow_back_ios_new_sharp,
-            color: Colors.black,
+            // color: Colors.black,
+            color: Theme.of(context).iconTheme.color,
           ),
         ),
+        actions: [
+          Switch(
+            trackColor: provider.isDarkModeOn
+                ? MaterialStateProperty.all(Colors.white)
+                : MaterialStateProperty.all(Colors.grey),
+            thumbColor: provider.isDarkModeOn
+                ? MaterialStateProperty.all(Colors.white)
+                : MaterialStateProperty.all(Colors.transparent),
+            thumbIcon: MaterialStateProperty.all(
+              Icon(
+                provider.isDarkModeOn
+                    ? Icons.wb_sunny_outlined
+                    : Icons.nightlight,
+                color: Colors.black,
+              ),
+            ),
+            value: Provider.of<MyThemeStateNotifier>(context).isDarkModeOn,
+            onChanged: (boolVal) {
+              Provider.of<MyThemeStateNotifier>(context, listen: false)
+                  .updateTheme(boolVal);
+            },
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -90,8 +118,14 @@ class EditProfilePage extends GetView<ProfileController> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text('DOB: ',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              Text(
+                'DOB: ',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: provider.isDarkModeOn ? Colors.white : Colors.black,
+                ),
+              ),
               const SizedBox(width: 20),
               Obx(
                 () => ElevatedButton(
@@ -99,17 +133,23 @@ class EditProfilePage extends GetView<ProfileController> {
                       fixedSize: MaterialStateProperty.all(
                         Size(MediaQuery.of(context).size.width / 3, 40),
                       ),
-                      backgroundColor: MaterialStateProperty.all(Colors.white),
+                      backgroundColor: MaterialStateProperty.all(
+                        provider.isDarkModeOn ? Colors.grey[800] : Colors.white,
+                      ),
                       side: MaterialStateProperty.all(
                           const BorderSide(color: Colors.grey))),
                   onPressed: () async {
                     await controller.selectDate(context,
-                        initialDate: controller.state.dob.value);
+                        initialDate: controller.state.dobInDateTime.value);
                   },
                   child: Text(
-                    controller
-                        .convertDatetimeToString(controller.state.dob.value),
-                    style: const TextStyle(color: Colors.black),
+                    controller.convertDatetimeToString(
+                      controller.state.dobInDateTime.value,
+                    ),
+                    style: TextStyle(
+                      color:
+                          provider.isDarkModeOn ? Colors.white : Colors.black,
+                    ),
                   ),
                 ),
               ),
@@ -128,6 +168,7 @@ class EditProfilePage extends GetView<ProfileController> {
                   progressIndicator: LoadingAnimationWidget.fourRotatingDots(
                       color: Colors.grey[400]!, size: 30));
               await controller.updateProfile().then((value) {
+                controller.onReady();
                 Loader.hide();
                 showTextMessageToaster('Done');
               }).onError((error, stackTrace) {
@@ -155,6 +196,7 @@ class _TextFieldItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<MyThemeStateNotifier>(context);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 25),
       child: TextField(
@@ -162,17 +204,22 @@ class _TextFieldItem extends StatelessWidget {
         cursorColor: Colors.grey,
         style: const TextStyle(fontSize: 17),
         decoration: InputDecoration(
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(26),
-              borderSide: const BorderSide(color: Colors.black54),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(26),
-              borderSide: const BorderSide(color: Colors.black54),
-            ),
-            prefixIcon: Icon(icon, color: Colors.black54),
-            labelText: field,
-            labelStyle: const TextStyle(color: Colors.black54)),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(26),
+            borderSide: BorderSide(
+                color: provider.isDarkModeOn ? Colors.white : Colors.black54),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(26),
+            borderSide: BorderSide(
+                color: provider.isDarkModeOn ? Colors.white : Colors.black54),
+          ),
+          prefixIcon: Icon(icon,
+              color: provider.isDarkModeOn ? Colors.white : Colors.black54),
+          labelText: field,
+          labelStyle: TextStyle(
+              color: provider.isDarkModeOn ? Colors.white : Colors.black54),
+        ),
       ),
     );
   }
