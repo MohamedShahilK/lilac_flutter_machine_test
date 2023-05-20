@@ -2,9 +2,11 @@
 
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:crypto/crypto.dart';
 import 'package:encrypt/encrypt.dart';
 import 'package:external_path/external_path.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -166,3 +168,49 @@ void notify({
     //     NotificationInterval(interval: 60, timeZone: timeZone, repeats: true),
   );
 }
+
+/// SHA256
+String duSHA256(String input) {
+  String salt = 'EIpWsyfiy@R@X#qn17!StJNdZK1fFF8iV6ffN!goZkqt#JxO'; // 加盐
+  var bytes = utf8.encode(input + salt);
+  var digest = sha256.convert(bytes);
+
+  return digest.toString();
+}
+
+String getRandomString(int length) {
+  const chars =
+      'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+  Random rnd = Random();
+  return String.fromCharCodes(Iterable.generate(
+      length, (_) => chars.codeUnitAt(rnd.nextInt(chars.length))));
+}
+
+// void showPicker(context) {
+//   showModalBottomSheet(
+//     context: context,
+//     builder: (BuildContext bc) {
+//       return SafeArea(
+//         child: Wrap(
+//           children: <Widget>[
+//             ListTile(
+//                 leading: const Icon(Icons.photo_library),
+//                 title: const Text('Gallery'),
+//                 onTap: () {
+//                   imgFromGallery();
+//                   Navigator.of(context).pop();
+//                 }),
+//             ListTile(
+//               leading: const Icon(Icons.photo_camera),
+//               title: const Text('Camera'),
+//               onTap: () {
+//                 // imgFromCamera();
+//                 Navigator.of(context).pop();
+//               },
+//             ),
+//           ],
+//         ),
+//       );
+//     },
+//   );
+// }

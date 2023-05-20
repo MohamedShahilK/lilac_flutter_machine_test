@@ -60,14 +60,30 @@ class ProfilePage extends GetView<ProfileController> {
             children: [
               // Profile Logo
               Stack(
-                children: const [
-                  CircleAvatar(
-                    maxRadius: 60,
-                    // child: Image.asset('assets/avatar.jpg'),
-                    // backgroundColor: Colors.red,
-                    backgroundImage: AssetImage('assets/avatar.jpg'),
+                children: [
+                  InkWell(
+                    onTap: () {
+                      Get.toNamed('/editProfile');
+                    },
+                    child: Obx(() => CircleAvatar(
+
+                          maxRadius: 60,
+                          // child: Image.asset('assets/avatar.jpg'),
+                          backgroundColor: Colors.grey[100],
+
+                          backgroundImage: controller.state.image.value == ''
+                              ? null
+                              : NetworkImage(controller.state.image.value),
+                        )),
+
+                    // child: const CircleAvatar(
+                    //   maxRadius: 60,
+                    //   // child: Image.asset('assets/avatar.jpg'),
+                    //   // backgroundColor: Colors.red,
+                    //   backgroundImage: AssetImage('assets/avatar.jpg') ,
+                    // ),
                   ),
-                  Positioned(
+                  const Positioned(
                     bottom: 0,
                     right: 0,
                     child: CircleAvatar(
@@ -171,7 +187,7 @@ class ProfilePage extends GetView<ProfileController> {
                           MediaQuery.of(context).size.width * (3 / 8), 45))),
                   child: Text(
                     'LogOut',
-                    style: TextStyle( 
+                    style: TextStyle(
                       color:
                           provider.isDarkModeOn ? Colors.white : Colors.black,
                     ),

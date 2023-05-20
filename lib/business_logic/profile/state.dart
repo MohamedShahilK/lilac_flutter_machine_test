@@ -6,6 +6,7 @@ class ProfileState {
   RxString name = ''.obs;
   RxString email = ''.obs;
   RxString phNum = ''.obs;
+  RxString image = ''.obs;
   // RxString dob = ''.obs;
   Rx<DateTime> dobInDateTime = DateTime.now().obs;
   Rx<String> dob = ''.obs;

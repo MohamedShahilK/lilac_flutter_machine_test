@@ -63,14 +63,28 @@ class EditProfilePage extends GetView<ProfileController> {
           // Profile Logo
           const SizedBox(height: 10),
           Stack(
-            children: const [
-              CircleAvatar(
-                maxRadius: 60,
-                // child: Image.asset('assets/avatar.jpg'),
-                // backgroundColor: Colors.red,
-                backgroundImage: AssetImage('assets/avatar.jpg'),
+            children: [
+              InkWell(
+                onTap: () {
+                  showPicker(context);
+                },
+                child: Obx(() => CircleAvatar(
+                      maxRadius: 60,
+                      // child: Image.asset('assets/avatar.jpg'),
+                      backgroundColor: Colors.grey[100],
+                      
+                      backgroundImage:controller.state.image.value == ''?null :
+                          NetworkImage(controller.state.image.value),
+                    )),
+
+                // child: const CircleAvatar(
+                //   maxRadius: 60,
+                //   // child: Image.asset('assets/avatar.jpg'),
+                //   // backgroundColor: Colors.red,
+                //   backgroundImage: AssetImage('assets/avatar.jpg') ,
+                // ),
               ),
-              Positioned(
+              const Positioned(
                 bottom: 0,
                 right: 0,
                 child: CircleAvatar(
@@ -172,7 +186,9 @@ class EditProfilePage extends GetView<ProfileController> {
                 controller.onReady();
                 Loader.hide();
                 showTextMessageToaster('Done');
-                notify(title: 'Lilac Flutter Machine Test', content: 'Profile Details Saved Successfully');
+                notify(
+                    title: 'Lilac Flutter Machine Test',
+                    content: 'Profile Details Saved Successfully');
               }).onError((error, stackTrace) {
                 Loader.hide();
               });
@@ -180,6 +196,35 @@ class EditProfilePage extends GetView<ProfileController> {
           )
         ],
       ),
+    );
+  }
+
+  void showPicker(context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext bc) {
+        return SafeArea(
+          child: Wrap(
+            children: <Widget>[
+              ListTile(
+                  leading: const Icon(Icons.photo_library),
+                  title: const Text('Gallery'),
+                  onTap: () async {
+                    await controller.imgFromGallery();
+                    Navigator.of(context).pop();
+                  }),
+              ListTile(
+                leading: const Icon(Icons.photo_camera),
+                title: const Text('Camera'),
+                onTap: () async {
+                  await controller.imgFromCamera();
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

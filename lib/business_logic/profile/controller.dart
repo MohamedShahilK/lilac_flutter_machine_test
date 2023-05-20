@@ -1,12 +1,18 @@
+// ignore_for_file: unnecessary_overrides, duplicate_ignore, avoid_print
+
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:lilac_flutter_machine_test/business_logic/profile/services.dart';
 import 'package:lilac_flutter_machine_test/business_logic/profile/state.dart';
 import 'package:lilac_flutter_machine_test/model/user_login_model.dart';
-import 'package:pinput/pinput.dart';
+import 'package:lilac_flutter_machine_test/services/extensions.dart';
+import 'package:lilac_flutter_machine_test/utils/custom_popup.dart';
 
 class ProfileController extends GetxController {
   final state = ProfileState();
@@ -17,6 +23,12 @@ class ProfileController extends GetxController {
   final emailController = TextEditingController();
   final dobController = TextEditingController();
 
+  var listener;
+
+  File? photo;
+  final ImagePicker _picker = ImagePicker();
+
+  // ignore: unnecessary_overrides
   @override
   void onInit() {
     super.onInit();
@@ -28,14 +40,13 @@ class ProfileController extends GetxController {
 
   @override
   void onReady() {
-    // TODO: implement onReady
     super.onReady();
     getUserData();
   }
 
   // Ger User Data
   Future getUserData() async {
-    print('111111111111111111111');
+    // print('111111111111111111111');
     UserLoginModel? userLoginModel;
     final docSnap = await services.getUserData();
     if (docSnap != null) {
@@ -52,6 +63,7 @@ class ProfileController extends GetxController {
       state.phNum.value = userLoginModel.phoneNumber;
       state.dob.value = convertDatetimeToString(userLoginModel.dob);
       state.dobInDateTime.value = userLoginModel.dob;
+      state.image.value = userLoginModel.image;
 
       usernameController.text = userLoginModel.userName;
       emailController.text = userLoginModel.email;
@@ -69,6 +81,7 @@ class ProfileController extends GetxController {
       "user_name": usernameController.text,
       "name": nameController.text,
       "dob": state.dobInDateTime.value,
+      "image": state.image.value,
       "updated_at": DateTime.now(),
     };
 
@@ -107,5 +120,68 @@ class ProfileController extends GetxController {
   String convertDatetimeToString(DateTime date) {
     var outputDate = DateFormat.yMd().format(date);
     return outputDate;
+  }
+
+// Uploading
+  Future imgFromGallery() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      photo = File(pickedFile.path);
+      await _uploadFile();
+    } else {
+      print('No image selected');
+    }
+  }
+
+  Future imgFromCamera() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.camera);
+    if (pickedFile != null) {
+      photo = File(pickedFile.path);
+      await _uploadFile();
+    } else {
+      print('No image selected');
+    }
+  }
+
+  Future _uploadFile() async {
+    if (photo == null) return;
+    // final filename = getRandomString(15) + photo!.path;
+    String filename = 'avatar';
+    try {
+      final ref = FirebaseStorage.instance.ref('chat').child(filename);
+
+      // Put file in that reference and listen uploading process
+      await ref.putFile(photo!).snapshotEvents.listen((event) async {
+        switch (event.state) {
+          case TaskState.running:
+            break;
+          case TaskState.paused:
+            break;
+          case TaskState.canceled:
+            break;
+          case TaskState.error:
+            break;
+          case TaskState.success:
+            // String imgUrl = await downloadImageUrl(filename);
+            await downloadImageUrl(filename);
+            showTextMessageToaster('Done');
+        }
+      });
+    } catch (e) {
+      print('There\'s an error $e');
+    }
+  }
+
+  Future downloadImageUrl(String filename) async {
+    final ref = FirebaseStorage.instance.ref('chat').child(filename);
+    final downloadLink = await ref.getDownloadURL();
+    if (downloadLink.isNotEmpty) {
+      state.image.value = downloadLink;
+      print(downloadLink);
+      await updateProfile().then((value) {
+        onReady();
+      });
+    }
+    // return await ref.getDownloadURL();
   }
 }

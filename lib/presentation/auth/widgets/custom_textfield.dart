@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:lilac_flutter_machine_test/business_logic/auth/controller.dart';
+import 'package:lilac_flutter_machine_test/theme/app_state_notifier.dart';
+import 'package:provider/provider.dart';
 
 class CustomTextField extends StatelessWidget {
   const CustomTextField({
@@ -28,6 +30,7 @@ class CustomTextField extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 25),
       child: TextFormField(
+        style: const TextStyle(color: Colors.black),
         // key: authController.formKey,
         controller: authController.phonenumController,
         obscureText: obscureText,

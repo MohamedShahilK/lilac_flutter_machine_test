@@ -10,6 +10,7 @@ class UserLoginModel {
   final String userName;
   final String name;
   final String email;
+  final String image;
   final DateTime dob;
   final String phoneNumber;
   final DateTime createdAt;
@@ -20,6 +21,7 @@ class UserLoginModel {
     required this.userName,
     required this.name,
     required this.email,
+    required this.image,
     required this.dob,
     required this.phoneNumber,
     required this.createdAt,
@@ -32,6 +34,7 @@ class UserLoginModel {
       userName: map['user_name'] as String,
       name: map['name'] as String,
       email: map['email_id'] as String,
+      image: map['image'] as String,
       phoneNumber: map['phone_number'] as String,
       // createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int),
       // updatedAt: DateTime.fromMillisecondsSinceEpoch(map['updatedAt'] as int),

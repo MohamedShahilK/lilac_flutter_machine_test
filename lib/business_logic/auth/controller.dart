@@ -148,7 +148,8 @@ class AuthController extends GetxController {
           'phone_number': userData.phoneNumber ?? '',
           'email_id': 'Add Email',
           'name': 'Add Name',
-          'dob': 'selet DOB',
+          'dob': DateTime.now(),
+          'image': '',
           'created_at': DateTime.now(),
           'updated_at': DateTime.now(),
         });

@@ -70,7 +70,7 @@ class _OtpSectionWidget extends StatelessWidget {
             onDone: () async {
               await controller.resendOtp();
             },
-            duration: const Duration(seconds: 30),
+            duration: const Duration(seconds: 60),
             textStyle: TextStyle(color: Colors.grey[800], fontSize: 18),
             separator: ':',
             shouldShowMinutes: (Duration val) {
